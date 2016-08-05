@@ -13,6 +13,8 @@ import Home from './components/Home';
 import Me from './components/Me';
 import MyData from './components/MyData';
 import MyMaps from './components/MyMaps';
+import TeamDetail from './components/TeamDetail';
+import UploadForm from './components/UploadForm';
 
 const Project = React.createClass({
   render(){
@@ -27,14 +29,17 @@ const CorpsMapHome = (
       <Route path="/project/:projectName" component={Project}></Route>
       <Route path="/:edipi/me" component={Me}></Route>
       <Route path="/:edipi/data" component={MyData}></Route>
+      <Route path="/:edipi/data/upload" component={UploadForm}></Route>
       <Route path="/:edipi/maps" component={MyMaps}></Route>
+      <Route path="/team/:id" component={TeamDetail}></Route>
     </Route>
   </Router>
 )
 
 const actions = Reflux.createActions([
   'login',
-  'logout'
+  'logout',
+  'loadTeam'
 ])
 
 app.extend({
@@ -50,5 +55,6 @@ window.app = app;
 //-----------------
 
 app.userStore = require('./stores/user_store');
+app.teamStore = require('./stores/team_store');
 
 app.init();

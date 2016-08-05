@@ -2,6 +2,8 @@ import Reflux from 'reflux';
 import app from 'ampersand-app';
 import corpsmapAuth from '../lib/corpsmap-auth-client';
 import moment from 'moment';
+import xhr from 'xhr';
+import config from '../config';
 
 const UserStore = Reflux.createStore({
   init(){
@@ -17,18 +19,33 @@ const UserStore = Reflux.createStore({
   getUser(){
     return this.user;
   },
+  getProfile(edipi, callback){
+    xhr({
+      url:config.centralRoot + 'profile/' + edipi
+    }, function(err, res, body){
+      var profile = JSON.parse(body);
+      callback(profile)
+    })
+  },
   setUser(payload){
+    var _this = this;
     var prettyDate = moment(payload.user[2], 'YYYY-MM-DDTHH:mm:SZ')
     var prettyIat = moment(payload.iat * 1000);
-    this.user = {
-      edipi: payload.user[0],
-      certName: payload.user[1],
-      dateCreated: payload.user[2],
-      prettyDateCreated: prettyDate.fromNow(),
-      iat: payload.iat,
-      prettyIat: prettyIat.fromNow()
-    }
-    this.trigger()
+    this.getProfile(payload.user[0], function(profile){
+      _this.user = {
+        edipi: payload.user[0],
+        certName: payload.user[1],
+        dateCreated: payload.user[2],
+        prettyDateCreated: prettyDate.fromNow(),
+        iat: payload.iat,
+        prettyIat: prettyIat.fromNow(),
+        username: profile.user.username,
+        email: profile.user.email,
+        teams: profile.teams,
+        datasets: profile.datasets
+      }
+      _this.trigger()
+    })
   },
   _login(){
     const _this = this;

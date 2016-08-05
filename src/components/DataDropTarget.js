@@ -2,11 +2,32 @@ import React from 'react';
 import style from '../styles/DataDropTarget.styl';
 import _ from 'lodash';
 
+const UploadForm = React.createClass({
+  render(){
+    return (
+      <form>
+        <div className="form-group">
+          <label htmlFor="datasetName">Dataset Name</label>
+          <input type="text" className="form-control" id="datasetName"></input>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="datasetDescription">Description</label>
+          <textarea type="text" rows="3" className="form-control" id="datasetDescription"></textarea>
+        </div>
+
+        <button type="submit" className="btn btn-default">Submit</button>
+      </form>
+    )
+  }
+})
+
 const DataDropTarget = React.createClass({
   displayName:'DataDropTarget',
   getInitialState(){
     return {
-      files:[]
+      files:[],
+      uploading:false
     }
   },
   componentDidMount(){
@@ -54,30 +75,53 @@ const DataDropTarget = React.createClass({
     })
   },
   upload(){
-    alert('going to upload via ajax, just not implemented yet')
+    //var url = '/' + this.props.user.edipi + '/data/upload';
+    //app.history.push(url)
+    this.setState({uploading:true})
+    var _this = this;
+    var i = 0;
+    function func(){
+      _this.setState({progress:i++});
+      if(i < 101) timer = setTimeout(func, 100)
+    }
+    var timer = setTimeout(func, 100)
   },
   render(){
     var Comp
+    var statusStyle = {
+      background: 'linear-gradient(to right, #f2f2f2 0%, #f2f2f2 '+ this.state.progress +'%, #FFF '+ (this.state.progress+2) +'%, #FFF 100%)'
+    }
     if(_.isEmpty(this.state.files)){
       Comp =  (
-        <div>
+        <div id="upload-drop-target" onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
           <input type="file" id="fileElem" multiple accept="*" className="hidden" onChange={this.handleFile}></input>
           <div className="drop-target-title">Drag and Drop Here! or</div>
           <button className="btn btn-xs btn-success" onClick={this.browse}>Click to Browse</button>
         </div>
       )
     }else{
-      Comp =  (
-        <div>
-          <div className="file-name">{this.state.files[0].name}</div>
-          <button className="btn btn-xs btn-success" onClick={this.upload}>Upload</button>
-          <button className="btn btn-xs btn-danger" onClick={this.clearFiles}>Clear</button>
-        </div>
-      )
+      if(this.state.uploading){
+        Comp = (
+          <div>
+            <div id="upload-drop-target" style={statusStyle} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
+              <div className="file-name">{this.state.files[0].name}</div>
+            </div>
+            <UploadForm />
+          </div>
+        )
+      }else{
+        Comp =  (
+          <div id="upload-drop-target" onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
+            <div className="file-name">{this.state.files[0].name}</div>
+            <button className="btn btn-xs btn-success" onClick={this.upload}>Upload</button>
+            <button className="btn btn-xs btn-danger" onClick={this.clearFiles}>Clear</button>
+          </div>
+        )
+      }
     }
 
     return (
-      <div id="upload-drop-target" onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
+      <div>
         {Comp}
       </div>
     )

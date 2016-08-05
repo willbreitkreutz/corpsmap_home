@@ -20,8 +20,13 @@ const MyData = React.createClass({
   cancelState(){
     this.setState({mode:'default'});
   },
+  componentWillMount(){
+    var user = app.userStore.getUser();
+    this.setState({user:user})
+  },
   render(){
     const mode = this.state.mode;
+    const user = this.state.user;
     const Components = mode === 'upload' ? [DataDropTarget] : mode === 'service' ? [ServiceLinkForm] : [];
 
     const addDataButtonClass = classnames({
@@ -44,7 +49,7 @@ const MyData = React.createClass({
           <div className="panel panel-default page-top-panel">
             <div className="panel-body">
               {Components.map(function(Comp){
-                return <Comp key={Comp.displayName} />
+                return <Comp key={Comp.displayName} user={user} />
               })}
               <div className={addDataButtonClass} role="group" aria-label="add datasets by upload or service connection">
                 <button onClick={this.uploadDataState} type="button" className="btn btn-info">Upload Dataset</button>

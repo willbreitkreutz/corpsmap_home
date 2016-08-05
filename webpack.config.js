@@ -5,5 +5,6 @@ module.exports = getConfig({
   in: 'src/index.js',
   out: 'build',
   clearBeforeBuild: '!(img)',
-  isDev: isDev
+  isDev: isDev,
+  port: 3002
 })

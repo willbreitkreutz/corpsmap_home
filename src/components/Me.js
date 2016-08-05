@@ -1,6 +1,11 @@
 import React from 'react';
 import NavbarBackground from './NavbarBackground';
 import _ from 'lodash';
+import classnames from 'classnames';
+import TeamsList from './TeamsList';
+import DatasetList from './DatasetList';
+import MapList from './MapList';
+import app from 'ampersand-app';
 
 const Me = React.createClass({
   getInitialState(){
@@ -16,66 +21,32 @@ const Me = React.createClass({
       this.setState({user:user})
     }
   },
-  goToMyData(){
-    app.history.push('/' + this.state.user.edipi + '/data');
-  },
-  goToMyMaps(){
-    app.history.push('/' + this.state.user.edipi + '/maps');
-  },
   render(){
+    var teams = this.state.user.teams;
     return (
       <div>
         <NavbarBackground />
         <div className="container">
           <div className="panel panel-default page-top-panel">
             <div className="panel-heading">
-              <span>Logged in as {this.state.user.certName}</span>
+              <span>Logged in as {this.state.user.username}</span>
               <span className="pull-right">Created account {this.state.user.prettyDateCreated}</span>
             </div>
             <div className="panel-body">
-              <h2>{this.state.user.edipi}</h2>
+              <h2>{this.state.user.username}</h2>
+              <h4>{this.state.user.email}</h4>
               <p>Last Validated {this.state.user.prettyIat}</p>
             </div>
-          </div>
-
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <h4>My Teams</h4>
-            </div>
-            <div className="panel-body">
-              Share your data with your team, and see datasets shared by other team members.
-            </div>
-            <ul className="list-group">
-              <li className="list-group-item no-data-list-item">No Teams yet</li>
-            </ul>
-            <div className="panel-footer clearfix">
-              <button type="button" className="btn btn-sm btn-default pull-right">Request New Team</button>
+            <div className="hidden panel-footer clearfix">
+              <button type="button" className="btn btn-sm btn-info pull-right">Edit Profile</button>
             </div>
           </div>
 
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <h4>My Data</h4>
-            </div>
-            <ul className="list-group">
-              <li className="list-group-item no-data-list-item">No Datasets yet</li>
-            </ul>
-            <div className="panel-footer clearfix">
-              <button onClick={this.goToMyData} type="button" className="btn btn-sm btn-info pull-right">Go to My Data</button>
-            </div>
-          </div>
+          <TeamsList teams={teams} />
 
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <h4>My Maps</h4>
-            </div>
-            <ul className="list-group">
-              <li className="list-group-item no-data-list-item">No Maps yet</li>
-            </ul>
-            <div className="panel-footer clearfix">
-              <button onClick={this.goToMyMaps} type="button" className="btn btn-sm btn-info pull-right">Go to My Maps</button>
-            </div>
-          </div>
+          <DatasetList user={this.state.user} />
+
+          <MapList user = {this.state.user} />
 
         </div>
       </div>
