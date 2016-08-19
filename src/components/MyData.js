@@ -4,12 +4,26 @@ import style from '../styles/MyData.styl';
 import DataDropTarget from './DataDropTarget';
 import ServiceLinkForm from './ServiceLinkForm';
 import classnames from 'classnames';
+import DatasetList from './DatasetList';
 
 const MyData = React.createClass({
   getInitialState(){
-    return ({
-      mode:'default'
+    return this.getStateFromStores();
+  },
+  componentDidMount(){
+    const _this = this;
+    this._unlistener = app.userStore.listen(function(){
+      _this.setState(_this.getStateFromStores());
     })
+  },
+  componentWillUnmount(){
+    this._unlistener();
+  },
+  getStateFromStores(){
+    return {
+      mode: 'default',
+      user: app.userStore.getUser()
+    }
   },
   uploadDataState(){
     this.setState({mode:'upload'});
@@ -19,10 +33,6 @@ const MyData = React.createClass({
   },
   cancelState(){
     this.setState({mode:'default'});
-  },
-  componentWillMount(){
-    var user = app.userStore.getUser();
-    this.setState({user:user})
   },
   render(){
     const mode = this.state.mode;
@@ -57,9 +67,7 @@ const MyData = React.createClass({
               </div>
               <button onClick={this.cancelState} type="button" className={cancelButtonClass}>Cancel</button>
             </div>
-            <ul className="list-group">
-              <li className="list-group-item no-data-list-item">No Datasets yet, add one above!</li>
-            </ul>
+            <DatasetList user={user} />
           </div>
         </div>
       </div>

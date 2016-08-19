@@ -42,6 +42,9 @@ export default {
     this._unsetToken();
     return true;
   },
+  getTokenString(){
+    return this._getStoredToken();
+  },
   getTokenHeader(){
     return JSON.parse(window.atob(this._getTokenPart(0))) || '';
   },

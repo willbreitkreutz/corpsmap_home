@@ -33,7 +33,7 @@ const TeamsList = React.createClass({
 
   },
   render(){
-    const teams = this.props.teams;
+    const teams = this.props.user.teams;
     let ListElements;
     if(_.isEmpty(teams)){
       ListElements = <li className="list-group-item no-data-list-item">No Teams Yet</li>

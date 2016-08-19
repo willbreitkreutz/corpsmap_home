@@ -3,26 +3,29 @@ import NavbarBackground from './NavbarBackground';
 import _ from 'lodash';
 import classnames from 'classnames';
 import TeamsList from './TeamsList';
-import DatasetList from './DatasetList';
+import MeDatasetList from './Me.MyData';
 import MapList from './MapList';
 import app from 'ampersand-app';
 
 const Me = React.createClass({
   getInitialState(){
-    return {
-      user:{}
-    }
+    return this.getStateFromStores();
   },
-  componentWillMount(){
-    var user = app.userStore.getUser();
-    if(_.isEmpty(user)){
-      app.history.push('/');
-    }else{
-      this.setState({user:user})
+  componentDidMount(){
+    const _this = this;
+    this._unlistener = app.userStore.listen(function(){
+      _this.setState(_this.getStateFromStores());
+    })
+  },
+  componentWillUnmount(){
+    this._unlistener();
+  },
+  getStateFromStores(){
+    return {
+      user: app.userStore.getUser()
     }
   },
   render(){
-    var teams = this.state.user.teams;
     return (
       <div>
         <NavbarBackground />
@@ -42,11 +45,11 @@ const Me = React.createClass({
             </div>
           </div>
 
-          <TeamsList teams={teams} />
+          <TeamsList user={this.state.user} />
 
-          <DatasetList user={this.state.user} />
+          <MeDatasetList user={this.state.user} />
 
-          <MapList user = {this.state.user} />
+          <MapList user={this.state.user} />
 
         </div>
       </div>

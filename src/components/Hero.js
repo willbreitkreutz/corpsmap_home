@@ -7,7 +7,7 @@ const Hero = React.createClass({
       <div className="jumbotron hero">
         <div className="container">
           <div className="hero-heading">CorpsMap 3.0</div>
-          <div className="hero-subtitle">The open-source web mapping platform for USACE</div>
+          <div className="hero-subtitle">The open web mapping platform for USACE</div>
         </div>
       </div>
     )

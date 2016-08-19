@@ -1,26 +1,27 @@
 import React from 'react';
 import style from '../styles/DataDropTarget.styl';
 import _ from 'lodash';
+import UploadForm from './UploadForm';
 
-const UploadForm = React.createClass({
-  render(){
-    return (
-      <form>
-        <div className="form-group">
-          <label htmlFor="datasetName">Dataset Name</label>
-          <input type="text" className="form-control" id="datasetName"></input>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="datasetDescription">Description</label>
-          <textarea type="text" rows="3" className="form-control" id="datasetDescription"></textarea>
-        </div>
-
-        <button type="submit" className="btn btn-default">Submit</button>
-      </form>
-    )
-  }
-})
+// const UploadForm = React.createClass({
+//   render(){
+//     return (
+//       <form>
+//         <div className="form-group">
+//           <label htmlFor="datasetName">Dataset Name</label>
+//           <input type="text" className="form-control" id="datasetName"></input>
+//         </div>
+//
+//         <div className="form-group">
+//           <label htmlFor="datasetDescription">Description</label>
+//           <textarea type="text" rows="3" className="form-control" id="datasetDescription"></textarea>
+//         </div>
+//
+//         <button type="submit" className="btn btn-default">Submit</button>
+//       </form>
+//     )
+//   }
+// })
 
 const DataDropTarget = React.createClass({
   displayName:'DataDropTarget',
@@ -78,13 +79,13 @@ const DataDropTarget = React.createClass({
     //var url = '/' + this.props.user.edipi + '/data/upload';
     //app.history.push(url)
     this.setState({uploading:true})
-    var _this = this;
-    var i = 0;
-    function func(){
-      _this.setState({progress:i++});
-      if(i < 101) timer = setTimeout(func, 100)
-    }
-    var timer = setTimeout(func, 100)
+    // var _this = this;
+    // var i = 0;
+    // function func(){
+    //   _this.setState({progress:i++});
+    //   if(i < 101) timer = setTimeout(func, 100)
+    // }
+    // var timer = setTimeout(func, 100)
   },
   render(){
     var Comp
@@ -106,14 +107,14 @@ const DataDropTarget = React.createClass({
             <div id="upload-drop-target" style={statusStyle} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
               <div className="file-name">{this.state.files[0].name}</div>
             </div>
-            <UploadForm />
+            <UploadForm user={this.props.user} files={this.state.files}/>
           </div>
         )
       }else{
         Comp =  (
           <div id="upload-drop-target" onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
             <div className="file-name">{this.state.files[0].name}</div>
-            <button className="btn btn-xs btn-success" onClick={this.upload}>Upload</button>
+            <button className="btn btn-xs btn-success" onClick={this.upload}>Confirm</button>
             <button className="btn btn-xs btn-danger" onClick={this.clearFiles}>Clear</button>
           </div>
         )
