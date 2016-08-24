@@ -16,25 +16,12 @@ const UploadForm = React.createClass({
     e.preventDefault();
     var _this = this;
     var files = this.props.files;
-    var token = app.userStore.getToken();
     var formData = new FormData();
     formData.append('dataset_name', this.state.dataset_name);
     formData.append('dataset_desc', this.state.dataset_desc);
     formData.append('input_file', files[0]);
 
-    xhr.post({
-      url: config.httpsUploadUrl,
-      headers:{
-        "Authorization": 'Bearer ' + token
-      },
-      body: formData
-    }, function(err, response, body){
-      if(err){
-        console.log('error submitting:', err);
-      }else{
-        app.actions.refreshProfile();
-      }
-    })
+    app.actions.upload(formData);
   },
   changeName(e){
     this.setState({dataset_name: e.target.value})

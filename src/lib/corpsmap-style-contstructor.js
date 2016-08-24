@@ -1,3 +1,4 @@
+import colorbrewer from './colorbrewer';
 
 const CorpsmapStyleConstructor = {
   polygon:{
@@ -11,6 +12,13 @@ const CorpsmapStyleConstructor = {
           outlinewidth: outlinewidth
         }
       }]
+    },
+    quantizeStyle(column, values, binCount, quant, ramp, outlinecolor, outlinewidth){
+
+
+    },
+    catagorizeStyle(){
+
     }
   }
 }

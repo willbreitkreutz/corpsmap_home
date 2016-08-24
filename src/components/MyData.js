@@ -15,9 +15,13 @@ const MyData = React.createClass({
     this._unlistener = app.userStore.listen(function(){
       _this.setState(_this.getStateFromStores());
     })
+    this._unlistener2 = app.layerStore.listen(function(data){
+      if(data === 'Inserting into Database') _this.setState({mode:'default'});
+    })
   },
   componentWillUnmount(){
     this._unlistener();
+    this._unlistener2();
   },
   getStateFromStores(){
     return {

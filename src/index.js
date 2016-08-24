@@ -41,7 +41,8 @@ const actions = Reflux.createActions([
   'login',
   'logout',
   'loadTeam',
-  'refresh'
+  'refresh',
+  'upload'
 ])
 
 app.extend({
@@ -58,5 +59,6 @@ window.app = app;
 
 app.userStore = require('./stores/user_store');
 app.teamStore = require('./stores/team_store');
+app.layerStore = require('./stores/layer_store');
 
 app.init();

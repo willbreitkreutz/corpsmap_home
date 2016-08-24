@@ -1,5 +1,6 @@
 import React from 'react';
-import Navbar from './Navbar'
+import Navbar from './Navbar';
+import Toaster from './Toaster';
 
 const PageContainer = React.createClass({
   render(){
@@ -7,6 +8,7 @@ const PageContainer = React.createClass({
       <div>
         <Navbar />
         {this.props.children}
+        <Toaster />
       </div>
     )
   }

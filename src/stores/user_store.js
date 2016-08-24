@@ -79,6 +79,14 @@ const UserStore = Reflux.createStore({
       return undefined;
     }
   },
+  // Starting to add filtering to list od datasets, might move to ampersand collection for this functionality re. photo classifier
+  // filterDatasets(filter){
+  //   this.filtered
+  // },
+  //
+  // getFilteredDatasets(){
+  //
+  // },
 
   getDatasets(matchObj){
     var datasets = [];
