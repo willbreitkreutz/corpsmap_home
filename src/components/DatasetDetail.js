@@ -114,7 +114,7 @@ const DatasetDetail = React.createClass({
                   <h4>Default Style</h4>
                 </div>
                 <div className="panel-body">
-<DatasetDefaultStyle dataset={dataset} />
+
                 </div>
               </div>
             </div>

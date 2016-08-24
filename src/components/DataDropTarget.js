@@ -1,30 +1,14 @@
 import React from 'react';
 import style from '../styles/DataDropTarget.styl';
 import _ from 'lodash';
+import classnames from 'classnames';
 import UploadForm from './UploadForm';
-
-// const UploadForm = React.createClass({
-//   render(){
-//     return (
-//       <form>
-//         <div className="form-group">
-//           <label htmlFor="datasetName">Dataset Name</label>
-//           <input type="text" className="form-control" id="datasetName"></input>
-//         </div>
-//
-//         <div className="form-group">
-//           <label htmlFor="datasetDescription">Description</label>
-//           <textarea type="text" rows="3" className="form-control" id="datasetDescription"></textarea>
-//         </div>
-//
-//         <button type="submit" className="btn btn-default">Submit</button>
-//       </form>
-//     )
-//   }
-// })
+import app from 'ampersand-app';
+import Spinner from 'react-spinkit';
 
 const DataDropTarget = React.createClass({
   displayName:'DataDropTarget',
+
   getInitialState(){
     return {
       files:[],
@@ -32,6 +16,10 @@ const DataDropTarget = React.createClass({
     }
   },
   componentDidMount(){
+    const _this = this;
+    this._unlistener = app.layerStore.listen(function(){
+      _this.setState(_this.getStateFromStores());
+    })
     window.addEventListener('drop',function(e){
       e.preventDefault();
     }, false);
@@ -40,6 +28,7 @@ const DataDropTarget = React.createClass({
     }, false);
   },
   componentWillUnmount(){
+    this._unlistener();
     window.removeEventListener('drop',function(e){
       e.preventDefault();
     }, false);
@@ -75,23 +64,26 @@ const DataDropTarget = React.createClass({
       files:[]
     })
   },
+  getStateFromStores(){
+    var status = app.layerStore.getUploadStatus();
+    return {
+      progress: status.pctComplete,
+      statusMsg: status.statusMsg
+    }
+  },
   upload(){
-    //var url = '/' + this.props.user.edipi + '/data/upload';
-    //app.history.push(url)
     this.setState({uploading:true})
-    // var _this = this;
-    // var i = 0;
-    // function func(){
-    //   _this.setState({progress:i++});
-    //   if(i < 101) timer = setTimeout(func, 100)
-    // }
-    // var timer = setTimeout(func, 100)
   },
   render(){
     var Comp
-    var statusStyle = {
-      background: 'linear-gradient(to right, #f2f2f2 0%, #f2f2f2 '+ this.state.progress +'%, #FFF '+ (this.state.progress+2) +'%, #FFF 100%)'
-    }
+    // var statusStyle = {
+    //   background: 'linear-gradient(to right, #f2f2f2 0%, #f2f2f2 '+ this.state.progress +'%, #FFF '+ (this.state.progress+2) +'%, #FFF 100%)'
+    // }
+    var uploadClass = classnames({
+      "upload-spinner-container": true,
+      "hidden": this.state.statusMsg !== 'Uploading Dataset'
+    })
+    //var statusMsg = ;
     if(_.isEmpty(this.state.files)){
       Comp =  (
         <div id="upload-drop-target" onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
@@ -104,8 +96,9 @@ const DataDropTarget = React.createClass({
       if(this.state.uploading){
         Comp = (
           <div>
-            <div id="upload-drop-target" style={statusStyle} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
-              <div className="file-name">{this.state.files[0].name}</div>
+            <div id="upload-drop-target" onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.handleFile} className="drop-target">
+              <div className={uploadClass}><Spinner spinnerName="three-bounce" className="upload-spinner" /></div>
+              <div className="file-name">{this.state.statusMsg || this.state.files[0].name}</div>
             </div>
             <UploadForm user={this.props.user} files={this.state.files}/>
           </div>
@@ -130,3 +123,7 @@ const DataDropTarget = React.createClass({
 })
 
 export default DataDropTarget;
+
+
+//<div className="file-name">{this.state.statusMsg || this.state.files[0].name}</div>
+//<Spinner spinnerName="three-bounce" />
